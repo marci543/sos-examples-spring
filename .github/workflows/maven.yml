@@ -20,6 +20,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build and verify with Maven
+        env:
+          # GitHub Packages: https://stackoverflow.com/a/58109063
+          GITHUB_USERNAME: x-access-token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd demo-car
-          mvn -B -DskipTests --fail-at-end install
+          mvn --settings settings.xml -B -DskipTests --fail-at-end install
